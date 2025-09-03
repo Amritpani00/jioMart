@@ -73,7 +73,7 @@ const ProductForm = () => {
                 <Form.Group className="mb-3">
                     <Form.Label>Description</Form.Label>
                     <Form.Control as="textarea" rows={3} name="description" value={product.description} onChange={handleChange} required />
-                </Form.Gromup>
+                </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Price</Form.Label>
                     <Form.Control type="number" name="price" value={product.price} onChange={handleChange} required />
