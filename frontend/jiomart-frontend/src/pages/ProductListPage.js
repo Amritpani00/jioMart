@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
 import ProductService from '../services/product.service';
-import { Link } from 'react-router-dom';
+import ProductCard from '../components/ProductCard';
 
 const ProductListPage = () => {
     const [products, setProducts] = useState([]);
@@ -29,21 +29,8 @@ const ProductListPage = () => {
 
             <Row>
                 {products.map(product => (
-                    <Col key={product.id} md={3} className="mb-4">
-                        <Card>
-                            <Link to={`/product/${product.id}`}>
-                                <Card.Img variant="top" src={product.imageUrl || 'https://via.placeholder.com/150.png?text=Product'} />
-                            </Link>
-                            <Card.Body>
-                                <Card.Title as={Link} to={`/product/${product.id}`}>{product.name}</Card.Title>
-                                <Card.Text>
-                                    {product.description}
-                                </Card.Text>
-                                <Card.Text>
-                                    <strong>${product.price.toFixed(2)}</strong>
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
+                    <Col key={product.id} sm={12} md={6} lg={4} xl={3} className="mb-4">
+                        <ProductCard product={product} />
                     </Col>
                 ))}
             </Row>
