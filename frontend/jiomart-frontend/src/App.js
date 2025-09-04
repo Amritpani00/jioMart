@@ -10,6 +10,7 @@ import CartPage from './pages/CartPage';
 import ProfilePage from './pages/ProfilePage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import AdminDashboard from './pages/AdminDashboard';
+import AddProductPage from './pages/AddProductPage';
 import ProductForm from './components/ProductForm';
 import { Container } from 'react-bootstrap';
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/product/new" element={<AddProductPage />} />
             <Route path="/admin/product/:id" element={<ProductForm />} />
           </Routes>
         </Container>

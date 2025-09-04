@@ -22,10 +22,13 @@ const RegisterPage = () => {
 
         AuthService.register(username, email, password).then(
             (response) => {
-                setMessage(response.data.message);
+                if (response.data.accessToken) {
+                    localStorage.setItem('user', JSON.stringify(response.data));
+                }
+                setMessage("User registered successfully! Redirecting to profile...");
                 setSuccessful(true);
                 setLoading(false);
-                setTimeout(() => navigate('/login'), 2000);
+                setTimeout(() => navigate('/profile'), 2000);
             },
             (error) => {
                 const resMessage =
