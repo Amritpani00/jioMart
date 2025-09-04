@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import ProductService from '../services/product.service';
+import FileService from '../services/file.service';
 
 const AddProductPage = () => {
     let navigate = useNavigate();
@@ -9,7 +10,7 @@ const AddProductPage = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+    const [image, setImage] = useState(null);
     const [category, setCategory] = useState('');
     const [stock, setStock] = useState('');
     const [loading, setLoading] = useState(false);
@@ -23,21 +24,38 @@ const AddProductPage = () => {
         setLoading(true);
         setSuccessful(false);
 
-        const product = {
-            name,
-            description,
-            price: parseFloat(price),
-            imageUrl,
-            category,
-            stock: parseInt(stock)
-        };
-
-        ProductService.createProduct(product).then(
+        FileService.upload(image).then(
             (response) => {
-                setMessage('Product added successfully!');
-                setSuccessful(true);
-                setLoading(false);
-                setTimeout(() => navigate('/'), 2000);
+                const imageUrl = response.data.filename;
+                const product = {
+                    name,
+                    description,
+                    price: parseFloat(price),
+                    imageUrl: `/uploads/${imageUrl}`,
+                    category,
+                    stock: parseInt(stock)
+                };
+
+                ProductService.createProduct(product).then(
+                    (response) => {
+                        setMessage('Product added successfully!');
+                        setSuccessful(true);
+                        setLoading(false);
+                        setTimeout(() => navigate('/'), 2000);
+                    },
+                    (error) => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+
+                        setMessage(resMessage);
+                        setSuccessful(false);
+                        setLoading(false);
+                    }
+                );
             },
             (error) => {
                 const resMessage =
@@ -47,7 +65,7 @@ const AddProductPage = () => {
                     error.message ||
                     error.toString();
 
-                setMessage(resMessage);
+                setMessage("Could not upload the image! " + resMessage);
                 setSuccessful(false);
                 setLoading(false);
             }
@@ -94,13 +112,12 @@ const AddProductPage = () => {
                             />
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formBasicImageUrl">
-                            <Form.Label>Image URL</Form.Label>
+                        <Form.Group className="mb-3" controlId="formBasicImage">
+                            <Form.Label>Image</Form.Label>
                             <Form.Control
-                                type="text"
-                                placeholder="Enter image URL"
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
+                                type="file"
+                                onChange={(e) => setImage(e.target.files[0])}
+                                required
                             />
                         </Form.Group>
 
